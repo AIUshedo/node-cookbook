@@ -41,7 +41,7 @@ describe 'node::default' do
 
     it "should create a nginx.conf template in /etc/nginx" do
       expect(chef_run).to create_template("/etc/nginx/
-      nginx.conf").width_variables(proxy_port: 3000)
+      nginx.conf").with_variables(proxy_port: 3000)
     end
 
   end
