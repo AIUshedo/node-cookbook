@@ -18,18 +18,31 @@ describe 'node::default' do
     it 'converges successfully' do
       expect { chef_run }.to_not raise_error
     end
-  end
-
-  context 'When all attributes are default, on CentOS 7.4.1708' do
-    let(:chef_run) do
-      # for a complete list of available platforms and versions see:
-      # https://github.com/customink/fauxhai/blob/master/PLATFORMS.md
-      runner = ChefSpec::ServerRunner.new(platform: 'centos', version: '7.4.1708')
-      runner.converge(described_recipe)
+# making a test to check if it installed nginx
+    it "should install nginx" do
+      expect(chef_run).to install_package("nginx")
     end
 
-    it 'converges successfully' do
-      expect { chef_run }.to_not raise_error
+    it "should be enabled" do
+      expect(chef_run).to start_service("nginx")
     end
+
+    it "should be started" do
+      expect(chef_run).to enable_service("nginx")
+    end
+
+    it "should install node.js from a recipe" do
+      expect(chef_run).to include_recipe("nodejs")
+    end
+
+    it "should install pm2 via npm" do
+      expect(chef_run).to install_nodejs_npm("pm2")
+    end
+
+    it "should create a nginx.conf template in /etc/nginx" do
+      expect(chef_run).to create_template("/etc/nginx/
+      nginx.conf").width_variables(proxy_port: 3000)
+    end
+
   end
 end
